@@ -1,4 +1,4 @@
-# Roc-MQTT-DisplayLT
+# Roc-MQTT-Display-LT
 
 Copyright (c) 2020-2022 Christian Heinrichs.
 All rights reserved.
@@ -41,7 +41,7 @@ Architecture, Hard- and Software Requirements, Installation and Configuration ar
 Several more ideas and features are on the to do list.
 Please share your experience and ideas for improvements via GitHub Issues function.
 
-Thank you for your interest in the Roc-MQTT-DisplayLT project.
+Thank you for your interest in the Roc-MQTT-Display-LT project.
 If you like the project please Star it here on GitHub and consider donating if you want to support further development.
 Donations are more than welcome and I will use them to buy new displays, controllers and sensors for development and testing and of course for a lot of coffee... :-)
 

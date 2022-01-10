@@ -1,4 +1,4 @@
-// Roc-MQTT-DisplayLT WEBSERVER
+// Roc-MQTT-Display-LT WEBSERVER
 // Version 1.01
 // Copyright (c) 2020-2022 Christian Heinrichs. All rights reserved.
 // https://github.com/chrisweather/RocMQTTdisplay
@@ -7,7 +7,7 @@
 #define WEB_H
 #include "ESP8266WebServer.h"  // https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WebServer
 #include <LittleFS.h>          // LittleFS file system https://github.com/esp8266/Arduino/tree/master/libraries/LittleFS
-#include "config.h"            // Roc-MQTT-Display configuration file
+#include "config.h"            // Roc-MQTT-Display-LT configuration file
 
 // Define WEBSERVER
 ESP8266WebServer webserver(80);

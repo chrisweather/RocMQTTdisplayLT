@@ -1,11 +1,11 @@
-// Roc-MQTT-DisplayLT CONFIGURATION
+// Roc-MQTT-Display-LT CONFIGURATION
 // Version 1.01
 // Copyright (c) 2020-2022 Christian Heinrichs. All rights reserved.
 // https://github.com/chrisweather/RocMQTTdisplay
 
 #ifndef CONFIG_H
 #define CONFIG_H
-#include "template.h"         // Roc-MQTT-Display template file
+#include "template.h"         // Roc-MQTT-Display-LT template file
 #include <LittleFS.h>         // LittleFS file system https://github.com/esp8266/Arduino/tree/master/libraries/LittleFS
 #include <ArduinoJson.h>      // ArduinoJson by Benoît Blanchon https://github.com/bblanchon/ArduinoJson
 

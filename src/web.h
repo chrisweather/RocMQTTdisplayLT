@@ -1,5 +1,5 @@
 // Roc-MQTT-DisplayLT WEBSERVER
-// Version 1.00
+// Version 1.01
 // Copyright (c) 2020-2022 Christian Heinrichs. All rights reserved.
 // https://github.com/chrisweather/RocMQTTdisplay
 

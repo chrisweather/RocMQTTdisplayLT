@@ -1,5 +1,5 @@
 // Roc-MQTT-DisplayLT CONFIGURATION
-// Version 1.00
+// Version 1.01
 // Copyright (c) 2020-2022 Christian Heinrichs. All rights reserved.
 // https://github.com/chrisweather/RocMQTTdisplay
 
@@ -24,7 +24,7 @@ struct Sec {
 };
 
 struct Config {
-  const char* VER = "Version 1.00";
+  const char* VER = "Version 1.01";
 // WIFI
   char     WIFI_DEVICENAME[19];    // Unique Controller Device Name for WiFi network
   int      WIFI_RECONDELAY;        // Delay between WiFi reconnection attempts, default = 60000 ms
@@ -103,9 +103,9 @@ void loadConfiguration(const char *configfile, Config &config)
   config.WIFI_RECONDELAY = doc["WIFI_RECONDELAY"] | 5000;
   strlcpy(config.OTA_HOSTNAME, doc["OTA_HOSTNAME"] | "RocMQTTdisplayLT01", sizeof(config.OTA_HOSTNAME));
   config.OTA_PORT = doc["OTA_PORT"] | 8266;
-  strlcpy(config.NTP_SERVER, doc["NTP_SERVER"] | "europe.pool.ntp.org", sizeof(config.NTP_SERVER));
+  strlcpy(config.NTP_SERVER, doc["NTP_SERVER"] | "0.europe.pool.ntp.org", sizeof(config.NTP_SERVER));
   strlcpy(config.NTP_TZ, doc["NTP_TZ"] | "CET-1CEST,M3.5.0,M10.5.0/3", sizeof(config.NTP_TZ));
-  strlcpy(config.MQTT_IP, doc["MQTT_IP"] | "192.168.2.197", sizeof(config.MQTT_IP));
+  strlcpy(config.MQTT_IP, doc["MQTT_IP"] | "", sizeof(config.MQTT_IP));
   config.MQTT_PORT = doc["MQTT_PORT"] | 1883;
   config.MQTT_MSGSIZE = doc["MQTT_MSGSIZE"] | 256;
   config.MQTT_KEEPALIVE1 = doc["MQTT_KEEPALIVE"] | 15;
@@ -113,7 +113,7 @@ void loadConfiguration(const char *configfile, Config &config)
   strlcpy(config.MQTT_TOPIC1, doc["MQTT_TOPIC1"] | "rocrail/service/info/clock", sizeof(config.MQTT_TOPIC1));
   strlcpy(config.MQTT_TOPIC2, doc["MQTT_TOPIC2"] | "rocrail/service/info/tx", sizeof(config.MQTT_TOPIC2));
   config.MQTT_DEBUG = doc["MQTT_DEBUG"] | 0;
-  config.STARTDELAY = doc["STARTDELAY"] | 10;
+  config.STARTDELAY = doc["STARTDELAY"] | 4000;
   config.UPDSPEED = doc["UPDSPEED"] | 10;
   config.SCREENSAVER = doc["SCREENSAVER"] | 60;
   strlcpy(DPL_id[0], doc["DPL_ID0"] | "D01", sizeof(DPL_id[0]));

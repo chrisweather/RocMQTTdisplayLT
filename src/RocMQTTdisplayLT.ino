@@ -1,10 +1,10 @@
 /*########################################################################################
-                             Roc-MQTT-DisplayLT
+                             Roc-MQTT-Display-LT
 Dynamic Passenger Information for Model Railroad Stations controlled by Rocrail via MQTT.
 An ESP8266-01 controller drives an 0.91" I2C OLED display. 
 Several ESPs can run in parallel so the total number of displays is not limited.
 
-Version 1.00  January 04, 2022
+Version 1.01  January 10, 2022
 
 Copyright (c) 2020-2022 Christian Heinrichs. All rights reserved.
 https://github.com/chrisweather/RocMQTTdisplayLT
@@ -66,19 +66,19 @@ Message Format sent from Rocrail text fields via MQTT
 using namespace std;
 
 // More U8G2 Display Constructors are listed in the U8G2 Wiki: https://github.com/olikraus/u8g2/wiki/u8g2setupcpp
-// Please uncomment only one constructor! Only one display type can be handled by one Roc-MQTT-DisplayLT controller.
+// Please uncomment only one constructor! Only one display type can be handled by one Roc-MQTT-Display-LT controller.
 
 // ### 128x32 ### OLED I2C Display, Define OLED Display as disp (D2: SDA, D1: SCL)
 U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C disp(U8G2_R0, U8X8_PIN_NONE, 0, 3);
 
 // ### 128x64 ### OLED I2C Display, Define OLED Display as disp (D2: SDA, D1: SCL)
-//U8G2_SSD1306_128X64_NONAME_F_HW_I2C disp(U8G2_R0, U8X8_PIN_NONE);
+//U8G2_SSD1306_128X64_NONAME_F_HW_I2C disp(U8G2_R0, U8X8_PIN_NONE, 0, 3);
 
 // ### 64x48 ### OLED I2C Display, Define OLED Display as disp (D2: SDA, D1: SCL)
-//U8G2_SSD1306_64X48_ER_F_HW_I2C disp(U8G2_R0, U8X8_PIN_NONE);
+//U8G2_SSD1306_64X48_ER_F_HW_I2C disp(U8G2_R0, U8X8_PIN_NONE, 0, 3);
 
 // ### 96x16 ### OLED I2C Display, Define OLED Display as disp (D2: SDA, D1: SCL)
-//U8G2_SSD1306_96X16_ER_F_HW_I2C disp(U8G2_R0, U8X8_PIN_NONE);
+//U8G2_SSD1306_96X16_ER_F_HW_I2C disp(U8G2_R0, U8X8_PIN_NONE, 0, 3);
 
 
 u8g2_uint_t offset1;  // current offset for the scrolling text
@@ -94,7 +94,9 @@ unsigned long lastNTP = 0;    // used by NTP
 time_t now;
 tm tm;
 String ntptime = "00:00";
-String rrtime = "00:00";
+String rrtime =  "00:00";
+String ntpdate = "dd.mm.yyyy";
+String rrdate =  "dd.mm.yyyy";
 
 String ZZA1_Targets =     "";
 String ZZA1_Template =    "";
@@ -116,7 +118,7 @@ void setup()
   while (!Serial) continue;
   delay(500);
 
-  Serial.print(F("\n\n\nStarting Roc-MQTT-DisplayLT..."));
+  Serial.print(F("\n\n\nStarting Roc-MQTT-Display-LT..."));
 
   // Initialize LittleFS File System
   if(!LittleFS.begin()){
@@ -319,7 +321,7 @@ void setup()
   digitalWrite(LED_BUILTIN, HIGH);
   delay(200);
 
-  Serial.println(F("\nRoc-MQTT-DisplayLT"));
+  Serial.println(F("\nRoc-MQTT-Display-LT"));
   Serial.println(config.VER);
   Serial.print(F("\nController: http://"));
   Serial.println(config.WIFI_DEVICENAME);
@@ -500,7 +502,7 @@ void DisplayInit()
       disp.setFont(fontno[6]);
       disp.setFontMode(0);
       disp.setCursor(3,13);
-      disp.print(F("Roc-MQTT-DisplayLT"));
+      disp.print(F("Roc-MQTT-Display-LT"));
       disp.setCursor(3,31);
       disp.print(config.VER);
       disp.nextPage();
@@ -688,6 +690,7 @@ void updateTime() {
   if (millis() - lastNTP < 20000){
     // Format time, add leading 0's
     ntptime = ("0" + String(tm.tm_hour)).substring( String(tm.tm_hour).length() - 1,  String(tm.tm_hour).length() +1) + ":" + ("0" + String(tm.tm_min)).substring( String(tm.tm_min).length() - 1,  String(tm.tm_min).length() +1);
+    ntpdate = ("0" + String(tm.tm_mday)).substring( String(tm.tm_mday).length() - 1,  String(tm.tm_mday).length() +1) + "." + ("0" + String(tm.tm_mon + 1)).substring( String(tm.tm_mon + 1).length() - 1, String(tm.tm_mon + 1).length() + 1) + "." + String(tm.tm_year + 1900);
     lastNTP = millis();
   }
   else {
@@ -699,7 +702,9 @@ void updateTime() {
 void runCmd(){
   ZZA1_Message = ZZA1_MessageO;
   ZZA1_Message.replace("{ntptime}", ntptime);
+  ZZA1_Message.replace("{ntpdate}", ntpdate);
   ZZA1_Message.replace("{rrtime}", rrtime);
+  ZZA1_Message.replace("{rrdate}", rrdate);
   ZZA1_MessageLoop = " +++ " + ZZA1_Message;
   width1 = disp.getUTF8Width(ZZA1_MessageLoop.c_str());
 }
@@ -708,7 +713,7 @@ void runCmd(){
 // This function is called once WIFI and MQTT are connected
 void onConnectionEstablished()
 {
-  // Subscribe MQTT client to topic: "rocrail/service/info/clock" to receive Rocrail time
+  // Subscribe MQTT client to topic: "rocrail/service/info/clock" to receive Rocrail time and date
   //client.subscribe("rocrail/service/info/clock", [](const String & payload1) {
   client.subscribe(config.MQTT_TOPIC1, [](const String & payload1) {
     //Serial.println(payload1);
@@ -721,7 +726,36 @@ void onConnectionEstablished()
     if (m.length() < 2){
       m = "0" + m;
     }
+    int w = (payload1.substring(payload1.indexOf("wday") + 6, payload1.indexOf("mday") - 2)).toInt();
+    String wd = "";
+    switch (w) {
+      case 1: wd = "Mo";
+              break;
+      case 2: wd = "Di";
+              break;
+      case 3: wd = "Mi";
+              break;
+      case 4: wd = "Do";
+              break;
+      case 5: wd = "Fr";
+              break;
+      case 6: wd = "Sa";
+              break;
+      case 7: wd = "So";
+              break;
+    }
+    String d = payload1.substring(payload1.indexOf("mday") + 6, payload1.indexOf("month") - 2);
+    if (d.length() < 2){
+      d = "0" + d;
+    }
+    String mo = payload1.substring(payload1.indexOf("month") + 7, payload1.indexOf("year") - 2);
+    if (mo.length() < 2){
+      mo = "0" + mo;
+    }
+    String y = payload1.substring(payload1.indexOf("year") + 6, payload1.indexOf("time") - 2);
+    
     rrtime = h + ":" + m;
+    rrdate = d + "." + mo + "." + y;
     runCmd();
   }, 1);
 
@@ -760,7 +794,9 @@ void onConnectionEstablished()
         ZZA1_Message = ZZA1_MessageO;
         if (pld.indexOf("{") > 0){
           ZZA1_Message.replace("{ntptime}", ntptime);
+          ZZA1_Message.replace("{ntpdate}", ntpdate);
           ZZA1_Message.replace("{rrtime}", rrtime);
+          ZZA1_Message.replace("{rrdate}", rrdate);
         }
         ZZA1_MessageLoop = " +++ " + ZZA1_Message;
         width1 = disp.getUTF8Width(ZZA1_MessageLoop.c_str());

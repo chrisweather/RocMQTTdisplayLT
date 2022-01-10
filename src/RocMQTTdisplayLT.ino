@@ -694,7 +694,7 @@ void updateTime() {
     lastNTP = millis();
   }
   else {
-    ntptime = "no NTP time";
+    ntptime = "no NTP data";
   }
 }
 

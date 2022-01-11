@@ -9,8 +9,8 @@ Wireless communication with Rocrail or other sources via MQTT messages.
 An ESP8266-01 controller can drive one 0.91" 128x32 I2C OLED display. 
 Several controllers can run in parallel so the total number of displays is not limited.
 
-Latest Version 1.00 
-January 04, 2022 
+Latest Version 1.01 
+January 10, 2022 
 
 The goal of this project is to provide simple to use and inexpensive displays to run in a Model Railroad environment.
 

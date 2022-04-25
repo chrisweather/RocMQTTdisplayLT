@@ -1,4 +1,5 @@
 # Roc-MQTT-Display-LT
+**This version will not be enhanced anymore, the functionality is included in the main project ROC-MQTT-Display now!**  
 
 Copyright (c) 2020-2022 Christian Heinrichs.
 All rights reserved.
